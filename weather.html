@@ -38,7 +38,7 @@
       // get query from request parameter or use default
       fluxQuery = new URLSearchParams(window.location.search).get('fluxQuery');
       if (!fluxQuery){
-        fluxQuery = `from(bucket:"my-bucket") |> range(start: -1d) |> filter(fn: (r) => r._measurement == "temperature")`
+        fluxQuery = `from(bucket:"jxo-bucket") |> range(start: -1d)`
       }
       const fluxQueryInput = document.getElementById('fluxQuery')
       fluxQueryInput.value =  fluxQuery
