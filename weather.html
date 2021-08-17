@@ -1,1 +1,48 @@
-<iframe src="https://johnfobrienjr.grafana.net/d-solo/7TdYcbvMk/weather-dash?orgId=1&from=1599304777373&to=1599326377374&panelId=2" width="450" height="200" frameborder="0"></iframe>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Giraffe</title>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/@influxdata/giraffe"></script>
+</head>
+
+<body id="home">
+  <main id="root"></main>
+  <script type="text/javascript">
+    class PlotRenderer extends React.Component {
+      render() {
+        const style = {
+          width: "calc(70vw - 20px)",
+          height: "calc(70vh - 20px)",
+          margin: "40px",
+        };
+
+        const lineLayer = {
+          type: "line",
+          x: "_time",
+          y: "_value"
+        };
+
+        const table = Giraffe.newTable(3)
+          .addColumn('_time', 'dateTime:RFC3339', 'time', [1589838401244, 1589838461244, 1589838521244])
+          .addColumn('_value', 'double', 'number', [2.58, 7.11, 4.79]);
+
+        const config = {
+          table,
+          layers: [lineLayer]
+        };
+
+        const SimplePlot = React.createElement(Giraffe.Plot, {config}, null);
+        return React.createElement('div', {style}, SimplePlot);
+      }
+    }
+
+    ReactDOM.render(
+      React.createElement(PlotRenderer),
+      document.getElementById('root')
+    );
+  </script>
+</body>
+</html>
