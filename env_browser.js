@@ -7,7 +7,7 @@
 // eslint-disable-next-line no-undef
 window.INFLUX_ENV = {
   /** InfluxDB v2 URL, '/influxdb' relies upon proxy to forward to the target influxDB */
-  url: 'https://us-west-2-1.aws.cloud2.influxdata.com/api/v2/write?org=48eb5fc1b0c3e9da&bucket=cfa20a86bf6081ca&precision=s', //'http://localhost:8086',
+  url: 'https://us-west-2-1.aws.cloud2.influxdata.com/api/v2/', //'http://localhost:8086',
   /** InfluxDB authorization token */
   token: 'CoZ9B1jB0oEDTaSv5q3zqOKeJr0H9x_7pfUFNjGgZ5FRTj9zX-iqgQcZk2ZrXOpWs_OtzjZuWcEEvrMQnTB6gA==',
   /** InfluxDB organization */
