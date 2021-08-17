@@ -32,7 +32,8 @@
       </div>    
     </fieldset>
     <button id="reloadButton">Reload</button>
-    <button id="sampleButton">Show Sample Data</button>
+    <button id="PastWeek">Past Week</button>
+    <button id="PastDay">Past Day</button>
     <button id="clientExamples">Open InfluxDB JavaScript Client Examples</button>
     <script>
       // get query from request parameter or use default
@@ -130,8 +131,10 @@
             document.getElementById('renderArea')
         );
       }
-      document.getElementById('sampleButton').addEventListener('click', () => {
-        sampleAndVisualize()
+      document.getElementById('PastWeek').addEventListener('click', () => {
+        fluxQuery = `from(bucket:"jxo-bucket") |> range(start: -7d)`
+        fluxQueryInput.value =  fluxQuery
+        queryAndVisualize()
       })
     </script>
   </body>
