@@ -23,7 +23,7 @@
       <legend>Flux Query</legend>
       <div style="display:flex; margin-bottom: 10px;">
         <textarea id="fluxQuery" style="flex: 1" rows="2"
-        >from(bucket:"my-bucket") |> range(start: -1d) |> filter(fn: (r) => r._measurement == "temperature")</textarea>
+        >from(bucket:"jxo-bucket") |> range(start: -1d)</textarea>
       </div>
     </fieldset>
     <fieldset>
@@ -67,7 +67,7 @@
             }],
             valueFormatters: {
               _time: giraffe.timeFormatter({
-                timeZone: 'UTC',
+                timeZone: 'EST',
                 format: 'YYYY-MM-DD HH:mm:ss ZZ',
               }),
             }
