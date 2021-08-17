@@ -1,12 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Giraffe</title>
-  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-  <script crossorigin src="https://unpkg.com/@influxdata/giraffe"></script>
-</head>
+<html>
+  <head>
+    <title>Example: Flux Query Results visualized with Giraffe</title>
+    <script>
+      // required by react
+      window.process = {
+        env : 'development'
+      }
+      // required by giraffe
+      global = window
+    </script>
+    <script src="https://unpkg.com/react@17.0.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17.0.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@influxdata/giraffe@0.41.0/dist/index.js"></script>
+    <script src="https://unpkg.com/@influxdata/influxdb-client/dist/index.browser.js"></script>
+    <script src="https://unpkg.com/@influxdata/influxdb-client-giraffe/dist/index.js"></script>
+    <!-- <script src="../packages/giraffe/dist/index.js"></script> -->
+    <script src="./env_browser.js"></script>
+  </head>
   <body>
     <h1>Example: Flux Query Results visualized with Giraffe</h1>
     <fieldset>
@@ -25,18 +35,14 @@
     <button id="sampleButton">Show Sample Data</button>
     <button id="clientExamples">Open InfluxDB JavaScript Client Examples</button>
     <script>
-      const url = "https://us-west-2-1.aws.cloud2.influxdata.com/api/v2/write?org=48eb5fc1b0c3e9da&bucket=cfa20a86bf6081ca&precision=s"
-      const token = "TyVKHPKlam2nL5kHIFIUTHK5bEY4ocBofYMrLmz00dAw6_LxqtoB"
-      const org = "48eb5fc1b0c3e9da"
-      const bucket = "cfa20a86bf6081ca"
       // get query from request parameter or use default
       fluxQuery = new URLSearchParams(window.location.search).get('fluxQuery');
       if (!fluxQuery){
-        fluxQuery = `from(bucket:"cfa20a86bf6081ca") |> range(start: -1d)`
+        fluxQuery = `from(bucket:"my-bucket") |> range(start: -1d) |> filter(fn: (r) => r._measurement == "temperature")`
       }
       const fluxQueryInput = document.getElementById('fluxQuery')
       fluxQueryInput.value =  fluxQuery
-      
+
       // create query API
       const {url, token, org} = window.INFLUX_ENV // loaded in ./env_browser.js
       const influxDBClient = window['@influxdata/influxdb-client']
