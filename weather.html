@@ -10,6 +10,39 @@
 
 <body id="home">
   <main id="root"></main>
-  <script src="https://raw.githubusercontent.com/robotra/robotra.github.io/master/weather.js">  </script>
+  <script type="text/javascript">
+    class PlotRenderer extends React.Component {
+      render() {
+        const style = {
+          width: "calc(70vw - 20px)",
+          height: "calc(70vh - 20px)",
+          margin: "40px",
+        };
+
+        const lineLayer = {
+          type: "line",
+          x: "_time",
+          y: "_value"
+        };
+
+        const table = Giraffe.newTable(3)
+          .addColumn('_time', 'dateTime:RFC3339', 'time', [1589838401244, 1589838461244, 1589838521244])
+          .addColumn('_value', 'double', 'number', [2.58, 7.11, 4.79]);
+
+        const config = {
+          table,
+          layers: [lineLayer]
+        };
+
+        const SimplePlot = React.createElement(Giraffe.Plot, {config}, null);
+        return React.createElement('div', {style}, SimplePlot);
+      }
+    }
+
+    ReactDOM.render(
+      React.createElement(PlotRenderer),
+      document.getElementById('root')
+    );
+  </script>
 </body>
 </html>
