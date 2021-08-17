@@ -7,42 +7,126 @@
   <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
   <script crossorigin src="https://unpkg.com/@influxdata/giraffe"></script>
 </head>
-
-<body id="home">
-  <main id="root"></main>
-  <script type="text/javascript">
-    class PlotRenderer extends React.Component {
-      render() {
-        const style = {
-          width: "calc(70vw - 20px)",
-          height: "calc(70vh - 20px)",
-          margin: "40px",
-        };
-
-        const lineLayer = {
-          type: "line",
-          x: "_time",
-          y: "_value"
-        };
-
-        const table = Giraffe.newTable(3)
-          .addColumn('_time', 'dateTime:RFC3339', 'time', [1589838401244, 1589838461244, 1589838521244])
-          .addColumn('_value', 'double', 'number', [2.58, 7.11, 4.79]);
-
-        const config = {
-          table,
-          layers: [lineLayer]
-        };
-
-        const SimplePlot = React.createElement(Giraffe.Plot, {config}, null);
-        return React.createElement('div', {style}, SimplePlot);
+  <body>
+    <h1>Example: Flux Query Results visualized with Giraffe</h1>
+    <fieldset>
+      <legend>Flux Query</legend>
+      <div style="display:flex; margin-bottom: 10px;">
+        <textarea id="fluxQuery" style="flex: 1" rows="2"
+        >from(bucket:"my-bucket") |> range(start: -1d) |> filter(fn: (r) => r._measurement == "temperature")</textarea>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Giraffe Visualization</legend>
+      <div style="width: 100%;height: 200px; border: 1px solid grey; margin-bottom: 10px;" id="renderArea">
+      </div>    
+    </fieldset>
+    <button id="reloadButton">Reload</button>
+    <button id="sampleButton">Show Sample Data</button>
+    <button id="clientExamples">Open InfluxDB JavaScript Client Examples</button>
+    <script>
+      const url = "https://us-west-2-1.aws.cloud2.influxdata.com/api/v2/write?org=48eb5fc1b0c3e9da&bucket=cfa20a86bf6081ca&precision=s"
+      const token = "TyVKHPKlam2nL5kHIFIUTHK5bEY4ocBofYMrLmz00dAw6_LxqtoB"
+      const org = "48eb5fc1b0c3e9da"
+      const bucket = "cfa20a86bf6081ca"
+      // get query from request parameter or use default
+      fluxQuery = new URLSearchParams(window.location.search).get('fluxQuery');
+      if (!fluxQuery){
+        fluxQuery = `from(bucket:"cfa20a86bf6081ca") |> range(start: -1d)`
       }
-    }
+      const fluxQueryInput = document.getElementById('fluxQuery')
+      fluxQueryInput.value =  fluxQuery
+      
+      // create query API
+      const {url, token, org} = window.INFLUX_ENV // loaded in ./env_browser.js
+      const influxDBClient = window['@influxdata/influxdb-client']
+      const influxDB = new influxDBClient.InfluxDB({url, token})
+      const queryApi = influxDB.getQueryApi(org)
 
-    ReactDOM.render(
-      React.createElement(PlotRenderer),
-      document.getElementById('root')
-    );
-  </script>
-</body>
+      // execute query and fill query data into giraffe table
+      const giraffe = window['@influxdata/giraffe']
+      // React functional component that renders query results or an error
+      function RenderResults({error, table}){
+        if (error){
+          // render error message
+          return React.createElement('center', null, error.toString())
+        } else if (table.length) {
+          // render giraffe plot
+          const plotConfig = { 
+            table: table,
+            layers: [{
+              type: 'line',
+              x: '_time',
+              y: '_value'
+            }],
+            valueFormatters: {
+              _time: giraffe.timeFormatter({
+                timeZone: 'UTC',
+                format: 'YYYY-MM-DD HH:mm:ss ZZ',
+              }),
+            }
+          };
+          return React.createElement(giraffe.Plot, {config: plotConfig})
+        } else {
+          // render empty table recevied
+          return React.createElement('center', null, 'Empty Table Received')
+        }
+      }
+      const influxDBClientGiraffe = window['@influxdata/influxdb-client-giraffe']
+      function queryAndVisualize() {
+        influxDBClientGiraffe.queryToTable(
+          queryApi,
+          fluxQueryInput.value,
+          giraffe.newTable
+        ). then(table => {
+          console.log('queryToTable returns', table)
+          ReactDOM.render(
+              React.createElement(RenderResults, {table}),
+              document.getElementById('renderArea')
+          );
+        }). catch(error => {
+          console.log('queryToTable fails', error)
+          ReactDOM.render(
+              React.createElement(RenderResults, {error}),
+              document.getElementById('renderArea')
+          );
+        })
+      }
+      queryAndVisualize()
+      document.getElementById('reloadButton').addEventListener('click', () => {
+        queryAndVisualize()
+      })
+      const clientExamples = document.getElementById('clientExamples')
+      clientExamples.addEventListener('click', e => {
+        const target = './index.html?fluxQuery='+encodeURIComponent(fluxQueryInput.value)
+        window.open(target, '_blank')
+      })
+      function sampleAndVisualize(){
+        // create sample query response
+        let queryResponseData = '#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double\n'
+        queryResponseData += '#group,false,false,true,true,true,true,false,false\n'
+        queryResponseData += '#default,_result,,,,,,,\n'
+        queryResponseData += ',result,table,_measurement,_field,_start,_stop,_time,_value\n'
+        const time = Math.trunc(Date.now()/60000) // start this second
+        const sampleStart = ',,0,temperature,value,2010-01-01T00:00:00Z,2030-01-01T00:00:00Z,'
+        const value = Math.random() * Math.PI
+        for(let i=0; i<1000; i++){
+          const _time = new Date((time + i) * 60000).toISOString()
+          const _value = 20 + 15*Math.sin(value+(i/1000)*Math.PI)
+          queryResponseData += sampleStart
+          queryResponseData += `${_time},${_value}\n`
+        }
+        // transform response to giraffe table and visualize
+        const table = influxDBClientGiraffe.csvToTable(queryResponseData,giraffe.newTable)
+        console.log('csvToTable returns', table)
+        ReactDOM.render(
+            React.createElement(RenderResults, {table}),
+            document.getElementById('renderArea')
+        );
+      }
+      document.getElementById('sampleButton').addEventListener('click', () => {
+        sampleAndVisualize()
+      })
+    </script>
+  </body>
 </html>
