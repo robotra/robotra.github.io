@@ -33,7 +33,8 @@
     </fieldset>
     <button id="reloadButton">Submit</button>
     <button id="PastWeek">Past Week</button>
-    <button id="PastDay">Past Day</button>
+    <button id="PastDay">Past Day</button>    
+    <button id="12Hour">Past 12 Hours</button>
     <script>
       // get query from request parameter or use default
       fluxQuery = new URLSearchParams(window.location.search).get('fluxQuery');
@@ -109,6 +110,10 @@
       document.getElementById('PastWeek').addEventListener('click', () => {
         fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -7d)`
         queryAndVisualize()
+      })
+      document.getElementById('12Hour'.addEventListener('click',() => {
+        fluxQueryInput.value = 'from(bucket:"jxo-bucket") |> range(start: -12h) |> timedMovingAverage(every: 5m, period: 20m)'
+        queryAndVizualize()
       })
     </script>
   </body>
