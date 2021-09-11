@@ -33,8 +33,7 @@
     </fieldset>
     <button id="reloadButton">Submit</button>
     <button id="PastWeek">Past Week</button>
-    <button id="PastDay">Past Day</button>    
-    <button id="12Hour">Past 12 Hours</button>
+    <button id="PastDay">Past Day</button>
     <script>
       // get query from request parameter or use default
       fluxQuery = new URLSearchParams(window.location.search).get('fluxQuery');
@@ -43,13 +42,11 @@
       }
       const fluxQueryInput = document.getElementById('fluxQuery')
       fluxQueryInput.value =  fluxQuery
-
       // create query API
       const {url, token, org} = window.INFLUX_ENV // loaded in ./env_browser.js
       const influxDBClient = window['@influxdata/influxdb-client']
       const influxDB = new influxDBClient.InfluxDB({url, token})
       const queryApi = influxDB.getQueryApi(org)
-
       // execute query and fill query data into giraffe table
       const giraffe = window['@influxdata/giraffe']
       // React functional component that renders query results or an error
@@ -78,7 +75,7 @@
           // render empty table recevied
           return React.createElement('center', null, 'Empty Table Received')
         }
-      
+      }
       const influxDBClientGiraffe = window['@influxdata/influxdb-client-giraffe']
       function queryAndVisualize() {
         influxDBClientGiraffe.queryToTable(
@@ -111,11 +108,6 @@
         fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -7d)`
         queryAndVisualize()
       })
-      document.getElementById('12Hour'.addEventListener('click', () => {
-        fluxQueryInput.value = 'from(bucket:"jxo-bucket") |> range(start: -12h) |> timedMovingAverage(every: 5m, period: 20m)'
-        queryAndVizualize()
-      })
-      
     </script>
   </body>
 </html>
