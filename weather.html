@@ -111,7 +111,7 @@
         fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -7d)`
         queryAndVisualize()
       })
-      document.getElementById('12Hour'.addEventListener('click',() => {
+      document.getElementById('12Hour'.addEventListener('click', () => {
         fluxQueryInput.value = 'from(bucket:"jxo-bucket") |> range(start: -12h) |> timedMovingAverage(every: 5m, period: 20m)'
         queryAndVizualize()
       })
