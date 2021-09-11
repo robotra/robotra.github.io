@@ -78,7 +78,7 @@
           // render empty table recevied
           return React.createElement('center', null, 'Empty Table Received')
         }
-      }
+      
       const influxDBClientGiraffe = window['@influxdata/influxdb-client-giraffe']
       function queryAndVisualize() {
         influxDBClientGiraffe.queryToTable(
@@ -115,6 +115,7 @@
         fluxQueryInput.value = 'from(bucket:"jxo-bucket") |> range(start: -12h) |> timedMovingAverage(every: 5m, period: 20m)'
         queryAndVizualize()
       })
+      
     </script>
   </body>
 </html>
