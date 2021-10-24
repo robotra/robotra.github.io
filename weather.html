@@ -39,7 +39,7 @@
       // get query from request parameter or use default
       fluxQuery = new URLSearchParams(window.location.search).get('fluxQuery');
       if (!fluxQuery){
-        fluxQuery = `from(bucket:"jxo-bucket") |> range(start: -1d)`
+        fluxQuery = `from(bucket:"jxo-bucket") |> range(start: -1d)|> filter(fn: (r) => r["_measurement"] == "FogValue")`
       }
       const fluxQueryInput = document.getElementById('fluxQuery')
       fluxQueryInput.value =  fluxQuery
@@ -102,15 +102,15 @@
         queryAndVisualize()
       })
       document.getElementById('PastDay').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -1d)`
+        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -1d)|> filter(fn: (r) => r["_measurement"] == "FogValue")`
         queryAndVisualize()
       })
       document.getElementById('PastWeek').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -7d)`
+        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -7d)|> filter(fn: (r) => r["_measurement"] == "FogValue")`
         queryAndVisualize()
       })
       document.getElementById('12Hour').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -12h) |> timedMovingAverage(every: 5m, period: 20m)`
+        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -12h) |> timedMovingAverage(every: 5m, period: 20m)|> filter(fn: (r) => r["_measurement"] == "FogValue")`
         queryAndVisualize()
       })
     </script>
