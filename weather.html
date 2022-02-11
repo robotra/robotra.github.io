@@ -110,7 +110,7 @@
         queryAndVisualize()
       })
       document.getElementById('12Hour').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -12h> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
+        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -12h)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
         queryAndVisualize()
       })
     </script>
