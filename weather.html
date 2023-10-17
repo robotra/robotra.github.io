@@ -102,15 +102,15 @@
         queryAndVisualize()
       })
       document.getElementById('PastDay').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -1d)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
+        fluxQueryInput.value = `from(bucket:"FogBucket") |> range(start: -1d)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
         queryAndVisualize()
       })
       document.getElementById('PastWeek').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -7d)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
+        fluxQueryInput.value = `from(bucket:"FogBucket") |> range(start: -7d)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
         queryAndVisualize()
       })
       document.getElementById('12Hour').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"jxo-bucket") |> range(start: -12h)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
+        fluxQueryInput.value = `from(bucket:"FogBucket") |> range(start: -12h)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
         queryAndVisualize()
       })
     </script>
