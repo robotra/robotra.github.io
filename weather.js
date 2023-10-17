@@ -16,10 +16,10 @@ import {newTable, Plot} from '@influxdata/giraffe'
           y: "_value"
         };
         
-        const queryApi = new InfluxDB({https://us-west-2-1.aws.cloud2.influxdata.com/api/v2/write?org=48eb5fc1b0c3e9da&bucket=cfa20a86bf6081ca&precision=s, TyVKHPKlam2nL5kHIFIUTHK5bEY4ocBofYMrLmz00dAw6_LxqtoB}).getQueryApi(48eb5fc1b0c3e9da)
+        const queryApi = new InfluxDB({https://us-east-1-1.aws.cloud2.influxdata.com/api/v2/write?org=9ce19a9d9b7af9ea&bucket=659988312168c2a0&precision=s, 5iq3ts97YXfRkGkhBTURznBf8P__I3NrtO275AsOO2du9UbUhz3s-pSHxGRvzq48moRg63_6SSCE40i5myXQhg==}).getQueryApi(48eb5fc1b0c3e9da)
         const table = await queryToTable(
           api,
-          'from(bucket: "cfa20a86bf6081ca") |> range(start: -30d)',
+          'from(bucket: "659988312168c2a0") |> range(start: -30d)',
           newTable
         )
         
