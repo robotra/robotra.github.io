@@ -35,6 +35,7 @@
     <button id="PastWeek">Past Week</button>    
     <button id="PastDay">Past Day</button>    
     <button id="12Hour">Past 12 Hours</button>
+    <button id="BatterySoC">Battery State of Charge</button>
     <script>
       // get query from request parameter or use default
       fluxQuery = new URLSearchParams(window.location.search).get('fluxQuery');
@@ -111,6 +112,10 @@
       })
       document.getElementById('12Hour').addEventListener('click', () => {
         fluxQueryInput.value = `from(bucket:"FogData") |> range(start: -12h)|> filter(fn: (r) => r["_measurement"] == "VCNL1proxStats")`
+        queryAndVisualize()
+      })
+        document.getElementById('BatterySoC').addEventListener('click', () => {
+        fluxQueryInput.value = `from(bucket:"FogData") |> range(start: -12h)|> filter(fn: (r) => r["_measurement"] == "BatterySoC")`
         queryAndVisualize()
       })
     </script>
