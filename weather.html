@@ -39,7 +39,7 @@
       // get query from request parameter or use default
       fluxQuery = new URLSearchParams(window.location.search).get('fluxQuery');
       if (!fluxQuery){
-        fluxQuery = `from(bucket:"FogData") |> range(start: -1d)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
+        fluxQuery = `from(bucket:"FogData") |> range(start: -1d)|> filter(fn: (r) => r["_measurement"] == "VCNL1proxStats")`
       }
       const fluxQueryInput = document.getElementById('fluxQuery')
       fluxQueryInput.value =  fluxQuery
@@ -102,15 +102,15 @@
         queryAndVisualize()
       })
       document.getElementById('PastDay').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"FogData") |> range(start: -1d)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
+        fluxQueryInput.value = `from(bucket:"FogData") |> range(start: -1d)|> filter(fn: (r) => r["_measurement"] == "VCNL1proxStats")`
         queryAndVisualize()
       })
       document.getElementById('PastWeek').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"FogData") |> range(start: -7d)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
+        fluxQueryInput.value = `from(bucket:"FogData") |> range(start: -7d)|> filter(fn: (r) => r["_measurement"] == "VCNL1proxStats")`
         queryAndVisualize()
       })
       document.getElementById('12Hour').addEventListener('click', () => {
-        fluxQueryInput.value = `from(bucket:"FogData") |> range(start: -12h)|> filter(fn: (r) => r["_measurement"] == "VCNL1ambStats")`
+        fluxQueryInput.value = `from(bucket:"FogData") |> range(start: -12h)|> filter(fn: (r) => r["_measurement"] == "VCNL1proxStats")`
         queryAndVisualize()
       })
     </script>
